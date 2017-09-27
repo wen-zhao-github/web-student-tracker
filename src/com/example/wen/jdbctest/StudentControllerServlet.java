@@ -58,12 +58,57 @@ public class StudentControllerServlet extends HttpServlet {
 		case "ADD":
 			addStudent(request,response);
 			break;
+		case "LOAD":
+			loadStudent(request,response);
+			break;
+		case "UPDATE":
+			updateStudent(request,response);
+			break;
+		case "DELETE":
+			deleteStudent(request,response);
+			break;
 		default:
 			listStudent(request,response);
 			
 		}
 		//response.setContentType("text/html");
 		//PrintWriter out = response.getWriter();
+	}
+
+	private void deleteStudent(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		// TODO Auto-generated method stub
+		String studentId = request.getParameter("student-id");
+		int id = Integer.parseInt(studentId);
+		studentDBUtils.deleteStudentById(id);
+		listStudent(request,response);
+		
+	}
+
+	private void updateStudent(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		// TODO Auto-generated method stub
+		String studentId = request.getParameter("student-id");
+		int id = Integer.parseInt(studentId);
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String email = request.getParameter("email");
+		
+		Student studentToUpdate = new Student(id, firstName, lastName, email);
+		studentDBUtils.updateStudent(studentToUpdate);
+		listStudent(request,response);
+		
+	}
+
+	private void loadStudent(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//get student id
+		String studentId = request.getParameter("student-id");
+		//get student from db
+		Student currentStudent = studentDBUtils.getStudent(studentId);
+		//place student in the request attribute
+		request.setAttribute("THE_CURRENT_STUDENT", currentStudent);
+		//dispatcher to jsp page
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/update-student-form.jsp"); 
+		dispatcher.forward(request, response);
 	}
 
 	private void addStudent(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{

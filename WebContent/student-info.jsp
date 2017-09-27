@@ -26,14 +26,27 @@
 					<th>First Name</th>
 					<th>Last Name</th>
 					<th>Email</th>
+					<th>Action</th>
 				</tr>
-					<c:forEach var = "temp" items = "${student_info_list}">				
-				    <tr>
+				<c:forEach var="temp" items="${student_info_list}">
+					<tr>
+						<!-- for each student, define the url-->
+						<c:url var="templink" value="StudentControllerServlet">
+							<c:param name="command" value="LOAD" />
+							<c:param name="student-id" value="${temp.id}" />
+						</c:url>
+						<c:url var="tempdeletelink" value="StudentControllerServlet">
+							<c:param name="command" value="DELETE" />
+							<c:param name="student-id" value="${temp.id}" />
+						</c:url>
 						<td>${temp.getFirstName()}</td>
 						<td>${temp.getLastName()}</td>
 						<td>${temp.getEmail()}</td>
-				    </tr>
-				    </c:forEach>
+						<td><a href="${templink}">Update</a> | <a href="${tempdeletelink}"
+						 onclick = "if(!( confirm('are you sure to delete this student? '))) return false"
+						>Delete</a></td>
+					</tr>
+				</c:forEach>
 			</table>
 
 		</div>
